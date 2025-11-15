@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { TrendingUp, Calendar } from 'lucide-react';
 import { analyticsApi } from '../../lib/analytics';
 import type { DailyBookingTrend } from '../../types/analytics';
+import { useBookingValidation } from '../../hooks/useBookingValidation';
 
 const BookingTrendsPage = () => {
 	const [startDate, setStartDate] = useState('');
@@ -10,15 +11,12 @@ const BookingTrendsPage = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState('');
 	const [hasSearched, setHasSearched] = useState(false);
+	const { validateDateRange } = useBookingValidation();
 
 	const handleFetchData = async () => {
-		if (!startDate || !endDate) {
-			setError('Please select both start and end dates');
-			return;
-		}
-
-		if (new Date(startDate) > new Date(endDate)) {
-			setError('Start date must be before end date');
+		const dateError = validateDateRange(startDate, endDate);
+		if (dateError) {
+			setError(dateError);
 			return;
 		}
 

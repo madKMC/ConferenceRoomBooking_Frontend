@@ -79,16 +79,18 @@ const RoomsPage = () => {
 
 		// Apply capacity filter
 		if (filterCapacity) {
-			filtered = filtered.filter(
-				(room) => room.capacity >= parseInt(filterCapacity)
-			);
+			const capacity = parseInt(filterCapacity);
+			if (!isNaN(capacity) && capacity > 0) {
+				filtered = filtered.filter((room) => room.capacity >= capacity);
+			}
 		}
 
 		// Apply floor filter
 		if (filterFloor) {
-			filtered = filtered.filter(
-				(room) => room.floor === parseInt(filterFloor)
-			);
+			const floor = parseInt(filterFloor);
+			if (!isNaN(floor)) {
+				filtered = filtered.filter((room) => room.floor === floor);
+			}
 		}
 
 		setFilteredRooms(filtered);

@@ -4,6 +4,9 @@ import api from '../../lib/api';
 import { invitationsApi } from '../../lib/invitations';
 import type { Room, Booking, User } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
+import { VALIDATION } from '../../lib/constants';
+import { useBookingValidation } from '../../hooks/useBookingValidation';
+import axios from 'axios';
 
 interface BookingModalProps {
 	isOpen: boolean;
@@ -19,6 +22,7 @@ const BookingModal = ({
 	booking,
 }: BookingModalProps) => {
 	const { user } = useAuth();
+	const { validateBookingTime } = useBookingValidation();
 	const [rooms, setRooms] = useState<Room[]>([]);
 	const [users, setUsers] = useState<User[]>([]);
 	const [selectedInvitees, setSelectedInvitees] = useState<number[]>([]);
@@ -187,6 +191,13 @@ const BookingModal = ({
 
 	const handleAddInvitee = (userId: number) => {
 		if (!selectedInvitees.includes(userId)) {
+			// Add max limit check
+			if (selectedInvitees.length >= VALIDATION.INVITATIONS.MAX_INVITEES) {
+				setError(
+					`Maximum ${VALIDATION.INVITATIONS.MAX_INVITEES} invitees allowed per booking`
+				);
+				return;
+			}
 			setSelectedInvitees([...selectedInvitees, userId]);
 		}
 	};
@@ -212,6 +223,40 @@ const BookingModal = ({
 		setIsLoading(true);
 
 		try {
+			// Validate user authentication
+			if (!user?.id) {
+				setError('User not authenticated');
+				setIsLoading(false);
+				return;
+			}
+
+			// Validate room selection
+			const roomId = parseInt(formData.room_id);
+			if (isNaN(roomId) || roomId <= 0) {
+				setError('Please select a valid room');
+				setIsLoading(false);
+				return;
+			}
+
+			// Validate title
+			if (!formData.title.trim()) {
+				setError('Please enter a booking title');
+				setIsLoading(false);
+				return;
+			}
+
+			// Validate booking time
+			const timeError = validateBookingTime(
+				formData.start_time,
+				formData.end_time,
+				formData.date
+			);
+			if (timeError) {
+				setError(timeError);
+				setIsLoading(false);
+				return;
+			}
+
 			// Check for time conflicts before submitting
 			const conflict = checkTimeConflict(
 				formData.start_time,
@@ -227,7 +272,7 @@ const BookingModal = ({
 					{ hour: '2-digit', minute: '2-digit' }
 				);
 				setError(
-					`Time conflict: "${conflict.title}" is already booked from ${conflictStart} to ${conflictEnd}`
+					`This time slot conflicts with "${conflict.title}" (${conflictStart} - ${conflictEnd})`
 				);
 				setIsLoading(false);
 				return;
@@ -240,8 +285,8 @@ const BookingModal = ({
 			const endDateTime = new Date(`${formData.date}T${formData.end_time}:00`);
 
 			const payload: any = {
-				room_id: parseInt(formData.room_id),
-				user_id: user?.id,
+				room_id: roomId,
+				user_id: user.id,
 				title: formData.title.trim(),
 				start_time: startDateTime.toISOString(),
 				end_time: endDateTime.toISOString(),
@@ -300,43 +345,61 @@ const BookingModal = ({
 			}
 			onSuccess();
 			onClose();
-		} catch (err: any) {
+		} catch (err: unknown) {
 			console.error('=== BOOKING ERROR ===');
 			console.error('Full error:', err);
-			console.error('Response data:', err.response?.data);
-			console.error(
-				'Response details:',
-				JSON.stringify(err.response?.data, null, 2)
-			);
 
-			let errorMessage = 'Failed to save booking';
+			if (axios.isAxiosError(err)) {
+				console.error('Response data:', err.response?.data);
+				console.error(
+					'Response details:',
+					JSON.stringify(err.response?.data, null, 2)
+				);
 
-			// Handle the new error format with details array
-			if (
-				err.response?.data?.details &&
-				Array.isArray(err.response.data.details)
-			) {
-				const details = err.response.data.details;
-				errorMessage = details
-					.map((detail: any) => {
-						const field = detail.path?.replace('body.', '') || 'Field';
-						return `${field}: ${detail.message}`;
-					})
-					.join('; ');
-			} else if (err.response?.data?.details?.issues) {
-				// Legacy Zod validation errors format
-				const issues = err.response.data.details.issues;
-				errorMessage = issues
-					.map(
-						(issue: any) =>
-							`${issue.path?.join('.') || 'Field'}: ${issue.message}`
-					)
-					.join('; ');
-			} else if (err.response?.data?.message) {
-				errorMessage = err.response.data.message;
+				// Handle 409 conflict with auto-refresh
+				if (err.response?.status === 409) {
+					setError(
+						'This time slot was just booked by someone else. Please check availability again.'
+					);
+					// Auto-refresh availability
+					if (formData.room_id && formData.date) {
+						fetchRoomBookings(formData.room_id, formData.date);
+					}
+					setIsLoading(false);
+					return;
+				}
+
+				let errorMessage = 'Failed to save booking';
+
+				// Handle the new error format with details array
+				if (
+					err.response?.data?.details &&
+					Array.isArray(err.response.data.details)
+				) {
+					const details = err.response.data.details;
+					errorMessage = details
+						.map((detail: any) => {
+							const field = detail.path?.replace('body.', '') || 'Field';
+							return `${field}: ${detail.message}`;
+						})
+						.join('; ');
+				} else if (err.response?.data?.details?.issues) {
+					// Legacy Zod validation errors format
+					const issues = err.response.data.details.issues;
+					errorMessage = issues
+						.map(
+							(issue: any) =>
+								`${issue.path?.join('.') || 'Field'}: ${issue.message}`
+						)
+						.join('; ');
+				} else if (err.response?.data?.message) {
+					errorMessage = err.response.data.message;
+				}
+
+				setError(errorMessage);
+			} else {
+				setError('An unexpected error occurred');
 			}
-
-			setError(errorMessage);
 		} finally {
 			setIsLoading(false);
 		}

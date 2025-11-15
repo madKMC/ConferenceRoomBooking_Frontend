@@ -4,6 +4,7 @@ import { analyticsApi } from '../../lib/analytics';
 import { invitationsApi } from '../../lib/invitations';
 import type { UserBookingSummary } from '../../types/analytics';
 import type { User } from '../../types';
+import { useBookingValidation } from '../../hooks/useBookingValidation';
 
 const UserHistoryPage = () => {
 	const [users, setUsers] = useState<User[]>([]);
@@ -15,6 +16,7 @@ const UserHistoryPage = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState('');
 	const [hasSearched, setHasSearched] = useState(false);
+	const { validateDateRange } = useBookingValidation();
 
 	useEffect(() => {
 		fetchUsers();
@@ -42,14 +44,21 @@ const UserHistoryPage = () => {
 			return;
 		}
 
+		// Ensure both dates are provided together or both are empty
 		if ((startDate && !endDate) || (!startDate && endDate)) {
-			setError('Please select both start and end dates, or leave both empty');
+			setError(
+				'Please provide both start and end dates, or leave both empty for all-time summary'
+			);
 			return;
 		}
 
-		if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
-			setError('Start date must be before end date');
-			return;
+		// Validate date range if both dates are provided
+		if (startDate && endDate) {
+			const dateError = validateDateRange(startDate, endDate);
+			if (dateError) {
+				setError(dateError);
+				return;
+			}
 		}
 
 		try {
