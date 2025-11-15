@@ -35,7 +35,7 @@ const Sidebar = ({ isOpen: isOpenProp, onClose }: SidebarProps) => {
 	return (
 		<>
 			<aside
-				className={`fixed left-0 top-[57px] h-[calc(100vh-57px)] bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 z-30 overflow-hidden ${
+				className={`fixed lg:relative top-0 left-0 h-screen lg:h-[calc(100vh-57px)] bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 overflow-hidden shrink-0 z-30 lg:z-auto ${
 					isOpen ? 'w-64' : 'w-0 lg:w-16'
 				}`}
 			>
@@ -105,6 +105,7 @@ const Sidebar = ({ isOpen: isOpenProp, onClose }: SidebarProps) => {
 					</nav>
 				</div>
 			</aside>
+			{/* Mobile overlay */}
 			{isOpen && onClose && (
 				<div
 					className='fixed inset-0 bg-black/50 z-20 lg:hidden'
