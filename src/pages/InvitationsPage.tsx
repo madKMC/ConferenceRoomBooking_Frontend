@@ -106,13 +106,13 @@ const InvitationsPage = () => {
 			</div>
 
 			{/* Filter Tabs */}
-			<div className='flex gap-2 border-b border-gray-200 dark:border-gray-700'>
+			<div className='flex gap-2 border-b border-gray-200 dark:border-gray-700 overflow-x-auto scrollbar-hide'>
 				{(['all', 'pending', 'accepted', 'declined', 'expired'] as const).map(
 					(filterOption) => (
 						<button
 							key={filterOption}
 							onClick={() => setFilter(filterOption)}
-							className={`px-4 py-2 font-medium capitalize transition-colors border-b-2 ${
+							className={`px-4 py-2 font-medium capitalize transition-colors border-b-2 whitespace-nowrap ${
 								filter === filterOption
 									? 'border-primary-600 text-primary-600 dark:text-primary-400'
 									: 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
