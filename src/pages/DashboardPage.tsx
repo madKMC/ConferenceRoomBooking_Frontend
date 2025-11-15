@@ -25,8 +25,8 @@ const DashboardPage = () => {
 		try {
 			const response = await api.get('/auth/me');
 			setUserId(response.data.data.id);
-		} catch (error) {
-			console.error('Error fetching user ID:', error);
+		} catch {
+			// Failed to fetch user ID
 		}
 	};
 
@@ -59,8 +59,8 @@ const DashboardPage = () => {
 			);
 
 			setUpcomingBookings(bookingsWithRooms);
-		} catch (error) {
-			console.error('Error fetching dashboard data:', error);
+		} catch {
+			// Failed to fetch dashboard data
 		} finally {
 			setIsLoading(false);
 		}

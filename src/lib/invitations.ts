@@ -97,17 +97,8 @@ export const invitationsApi = {
 			params.search = search.trim();
 		}
 
-		console.log('📤 REQUEST to /api/users');
-		console.log('Parameters being sent:', JSON.stringify(params, null, 2));
-		console.log(
-			'Query string will be:',
-			new URLSearchParams(params as Record<string, string>).toString()
-		);
-
 		const response = await api.get('/users', { params });
 
-		console.log('✅ SUCCESS: Users fetched');
-		console.log('Response data:', response.data);
 		return response.data.data;
 	},
 };

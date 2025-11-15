@@ -35,8 +35,8 @@ const AdminAnalyticsOverview = () => {
 
 			setUtilization(utilizationData);
 			setDailyTrends(trendsData);
-		} catch (error) {
-			console.error('Error fetching overview data:', error);
+		} catch {
+			// Failed to fetch analytics data
 		} finally {
 			setIsLoading(false);
 		}

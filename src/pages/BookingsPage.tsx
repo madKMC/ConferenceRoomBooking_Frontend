@@ -23,8 +23,6 @@ const BookingsPage = () => {
 			const response = await api.get(`/users/${user?.id}/bookings`);
 			const allBookings = response.data.data || [];
 
-			console.log('📚 Raw bookings from API:', allBookings);
-
 			// Transform bookings to use room_name if available
 			const bookingsWithRooms = allBookings.map((booking: any) => {
 				// If the booking has room_name directly (from some endpoints), create a room object
@@ -42,10 +40,9 @@ const BookingsPage = () => {
 				return booking;
 			});
 
-			console.log('📋 Bookings with room data:', bookingsWithRooms);
 			setBookings(bookingsWithRooms);
-		} catch (error) {
-			console.error('Error fetching bookings:', error);
+		} catch {
+			// Failed to fetch bookings
 		} finally {
 			setIsLoading(false);
 		}

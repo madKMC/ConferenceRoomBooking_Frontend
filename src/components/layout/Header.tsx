@@ -31,8 +31,8 @@ const Header = ({ onToggleSidebar }: HeaderProps) => {
 					(inv.display_status || inv.status) !== 'expired'
 			).length;
 			setPendingCount(pending);
-		} catch (error) {
-			console.error('Error fetching invitations:', error);
+		} catch {
+			// Failed to fetch invitations
 		}
 	};
 

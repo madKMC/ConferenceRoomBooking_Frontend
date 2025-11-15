@@ -27,8 +27,8 @@ const InvitationsPage = () => {
 			setIsLoading(true);
 			const data = await invitationsApi.getMyInvitations();
 			setInvitations(data);
-		} catch (error) {
-			console.error('Error fetching invitations:', error);
+		} catch {
+			// Failed to fetch invitations
 		} finally {
 			setIsLoading(false);
 		}
@@ -41,8 +41,8 @@ const InvitationsPage = () => {
 		try {
 			await invitationsApi.respondToInvitation(bookingId, status);
 			await fetchInvitations();
-		} catch (error) {
-			console.error('Error responding to invitation:', error);
+		} catch {
+			// Failed to respond to invitation
 		}
 	};
 

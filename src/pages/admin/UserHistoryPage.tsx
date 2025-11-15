@@ -26,8 +26,8 @@ const UserHistoryPage = () => {
 		try {
 			const allUsers = await invitationsApi.getUsers(undefined, 100, 0);
 			setUsers(allUsers);
-		} catch (err) {
-			console.error('Error fetching users:', err);
+		} catch {
+			// Failed to fetch users
 		}
 	};
 

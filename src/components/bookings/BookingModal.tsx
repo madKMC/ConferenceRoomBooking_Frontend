@@ -78,8 +78,8 @@ const BookingModal = ({
 		try {
 			const response = await api.get('/rooms');
 			setRooms(response.data.data || []);
-		} catch (err) {
-			console.error('Error fetching rooms:', err);
+		} catch {
+			// Failed to load rooms
 		}
 	};
 
@@ -89,12 +89,8 @@ const BookingModal = ({
 			const allUsers = await invitationsApi.getUsers(undefined, 100, 0);
 			// Filter out the current user from the list
 			setUsers(allUsers.filter((u) => u.id !== user?.id));
-		} catch (err: any) {
-			console.error('❌ Failed to load users for invitations');
-			console.error('Error details:', err.response?.data);
-			console.error('Status:', err.response?.status);
-			console.error('Full error:', err);
-			// Set empty array so the booking can still be created without invites
+		} catch {
+			// Failed to load users - booking can still be created without invites
 			setUsers([]);
 		}
 	};
@@ -105,8 +101,7 @@ const BookingModal = ({
 			const inviteeIds = invitees.map((inv) => inv.user_id);
 			setExistingInvitees(inviteeIds);
 			setSelectedInvitees(inviteeIds);
-		} catch (err) {
-			console.error('Error fetching existing invitees:', err);
+		} catch {
 			setExistingInvitees([]);
 			setSelectedInvitees([]);
 		}
@@ -129,8 +124,7 @@ const BookingModal = ({
 				? bookings.filter((b: Booking) => b.id !== booking.id)
 				: bookings;
 			setExistingBookings(filteredBookings);
-		} catch (err) {
-			console.error('Error fetching room bookings:', err);
+		} catch {
 			setExistingBookings([]);
 		} finally {
 			setIsCheckingAvailability(false);
@@ -297,8 +291,6 @@ const BookingModal = ({
 				payload.description = formData.description.trim();
 			}
 
-			console.log('=== BOOKING PAYLOAD ===', JSON.stringify(payload, null, 2));
-
 			if (booking) {
 				await api.patch(`/bookings/${booking.id}`, payload);
 
@@ -314,8 +306,8 @@ const BookingModal = ({
 				if (inviteesToAdd.length > 0) {
 					try {
 						await invitationsApi.addInvitees(booking.id, inviteesToAdd);
-					} catch (inviteErr) {
-						console.error('Error adding invitees:', inviteErr);
+					} catch {
+						// Invitation update failed
 					}
 				}
 
@@ -325,8 +317,8 @@ const BookingModal = ({
 						for (const userId of inviteesToRemove) {
 							await invitationsApi.removeInvitee(booking.id, userId);
 						}
-					} catch (removeErr) {
-						console.error('Error removing invitees:', removeErr);
+					} catch {
+						// Invitation removal failed
 					}
 				}
 			} else {
@@ -337,8 +329,7 @@ const BookingModal = ({
 				if (selectedInvitees.length > 0) {
 					try {
 						await invitationsApi.addInvitees(newBookingId, selectedInvitees);
-					} catch (inviteErr) {
-						console.error('Error adding invitees:', inviteErr);
+					} catch {
 						// Don't fail the whole operation if invites fail
 					}
 				}
@@ -346,16 +337,7 @@ const BookingModal = ({
 			onSuccess();
 			onClose();
 		} catch (err: unknown) {
-			console.error('=== BOOKING ERROR ===');
-			console.error('Full error:', err);
-
 			if (axios.isAxiosError(err)) {
-				console.error('Response data:', err.response?.data);
-				console.error(
-					'Response details:',
-					JSON.stringify(err.response?.data, null, 2)
-				);
-
 				// Handle 409 conflict with auto-refresh
 				if (err.response?.status === 409) {
 					setError(

@@ -52,8 +52,8 @@ const RoomsPage = () => {
 			setIsLoading(true);
 			const response = await api.get('/rooms');
 			setRooms(response.data.data || []);
-		} catch (error) {
-			console.error('Error fetching rooms:', error);
+		} catch {
+			// Failed to fetch rooms
 		} finally {
 			setIsLoading(false);
 		}
@@ -107,8 +107,7 @@ const RoomsPage = () => {
 			});
 
 			setRoomBookings(response.data.data || []);
-		} catch (error: unknown) {
-			console.error('Error fetching room bookings:', error);
+		} catch {
 			setRoomBookings([]);
 		} finally {
 			setIsLoadingBookings(false);
