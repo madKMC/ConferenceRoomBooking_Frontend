@@ -30,28 +30,34 @@ const Sidebar = () => {
 		<>
 			<button
 				onClick={() => setIsOpen(!isOpen)}
-				className='fixed top-4 left-4 z-50 lg:hidden p-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors'
+				className='fixed top-4 left-4 z-50 lg:hidden p-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors shadow-lg'
 			>
 				{isOpen ? <X size={20} /> : <Menu size={20} />}
 			</button>
 
 			<aside
-				className={`fixed lg:sticky top-0 left-0 h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 z-40 ${
+				className={`fixed lg:sticky top-0 left-0 h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 z-40 overflow-hidden ${
 					isOpen ? 'w-64' : 'w-0 lg:w-16'
 				}`}
 			>
-				<div className='flex flex-col h-full'>
-					<div className='p-6 border-b border-gray-200 dark:border-gray-700'>
+				<div className='flex flex-col h-full w-64 lg:w-full'>
+					<div
+						className={`p-6 border-b border-gray-200 dark:border-gray-700 ${
+							!isOpen && 'hidden lg:block'
+						}`}
+					>
 						<h1
 							className={`font-bold text-xl text-primary-600 dark:text-primary-400 ${
-								!isOpen && 'lg:hidden'
+								!isOpen && 'lg:text-center'
 							}`}
 						>
 							{isOpen ? 'Conference' : 'C'}
 						</h1>
 					</div>
 
-					<nav className='flex-1 p-4 space-y-2'>
+					<nav
+						className={`flex-1 p-4 space-y-2 ${!isOpen && 'hidden lg:block'}`}
+					>
 						{navItems.map((item) => (
 							<NavLink
 								key={item.to}
@@ -115,7 +121,9 @@ const Sidebar = () => {
 
 					<button
 						onClick={() => setIsOpen(!isOpen)}
-						className='hidden lg:flex items-center justify-center p-4 border-t border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors'
+						className={`hidden lg:flex items-center justify-center p-4 border-t border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
+							!isOpen && 'lg:w-16'
+						}`}
 					>
 						<Menu size={20} />
 					</button>

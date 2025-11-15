@@ -112,28 +112,28 @@ const BookingTrendsPage = () => {
 
 			{/* Summary Cards */}
 			{hasSearched && trends.length > 0 && (
-				<div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-					<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6'>
-						<h3 className='text-sm font-medium text-gray-600 dark:text-gray-400 mb-2'>
+				<div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6'>
+					<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6'>
+						<h3 className='text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400 mb-2 truncate'>
 							Total Bookings
 						</h3>
-						<div className='text-3xl font-bold text-gray-800 dark:text-white'>
+						<div className='text-2xl md:text-3xl font-bold text-gray-800 dark:text-white break-all'>
 							{totalBookings}
 						</div>
 					</div>
-					<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6'>
-						<h3 className='text-sm font-medium text-gray-600 dark:text-gray-400 mb-2'>
+					<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6'>
+						<h3 className='text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400 mb-2 truncate'>
 							Total Hours Booked
 						</h3>
-						<div className='text-3xl font-bold text-gray-800 dark:text-white'>
+						<div className='text-2xl md:text-3xl font-bold text-gray-800 dark:text-white break-all'>
 							{totalHours.toFixed(1)}
 						</div>
 					</div>
-					<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6'>
-						<h3 className='text-sm font-medium text-gray-600 dark:text-gray-400 mb-2'>
+					<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6'>
+						<h3 className='text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400 mb-2 truncate'>
 							Avg Bookings/Day
 						</h3>
-						<div className='text-3xl font-bold text-gray-800 dark:text-white'>
+						<div className='text-2xl md:text-3xl font-bold text-gray-800 dark:text-white break-all'>
 							{avgBookingsPerDay.toFixed(1)}
 						</div>
 					</div>
@@ -164,15 +164,20 @@ const BookingTrendsPage = () => {
 			) : hasSearched ? (
 				<>
 					{/* Chart - Bookings */}
-					<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6'>
-						<h2 className='text-xl font-semibold mb-6'>Daily Bookings</h2>
-						<div className='space-y-3'>
+					<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6 overflow-hidden'>
+						<h2 className='text-lg md:text-xl font-semibold mb-4 md:mb-6'>
+							Daily Bookings
+						</h2>
+						<div className='space-y-3 overflow-x-auto'>
 							{trends.map((day) => (
-								<div key={day.date} className='flex items-center gap-4'>
-									<div className='w-24 text-sm text-gray-600 dark:text-gray-400'>
+								<div
+									key={day.date}
+									className='flex items-center gap-2 md:gap-4 min-w-0'
+								>
+									<div className='w-20 md:w-24 text-xs md:text-sm text-gray-600 dark:text-gray-400 shrink-0'>
 										{formatDate(day.date)}
 									</div>
-									<div className='flex-1'>
+									<div className='flex-1 min-w-0'>
 										<div className='flex items-center gap-2'>
 											<div className='flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-6'>
 												<div
@@ -197,15 +202,20 @@ const BookingTrendsPage = () => {
 					</div>
 
 					{/* Chart - Hours */}
-					<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6'>
-						<h2 className='text-xl font-semibold mb-6'>Daily Hours Booked</h2>
-						<div className='space-y-3'>
+					<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6 overflow-hidden'>
+						<h2 className='text-lg md:text-xl font-semibold mb-4 md:mb-6'>
+							Daily Hours Booked
+						</h2>
+						<div className='space-y-3 overflow-x-auto'>
 							{trends.map((day) => (
-								<div key={day.date} className='flex items-center gap-4'>
-									<div className='w-24 text-sm text-gray-600 dark:text-gray-400'>
+								<div
+									key={day.date}
+									className='flex items-center gap-2 md:gap-4 min-w-0'
+								>
+									<div className='w-20 md:w-24 text-xs md:text-sm text-gray-600 dark:text-gray-400 shrink-0'>
 										{formatDate(day.date)}
 									</div>
-									<div className='flex-1'>
+									<div className='flex-1 min-w-0'>
 										<div className='flex items-center gap-2'>
 											<div className='flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-6'>
 												<div
@@ -235,16 +245,16 @@ const BookingTrendsPage = () => {
 							<table className='w-full'>
 								<thead className='bg-gray-50 dark:bg-gray-700'>
 									<tr>
-										<th className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
+										<th className='px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
 											Date
 										</th>
-										<th className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
+										<th className='px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
 											Total Bookings
 										</th>
-										<th className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
+										<th className='px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
 											Total Hours
 										</th>
-										<th className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
+										<th className='px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
 											Avg Hours/Booking
 										</th>
 									</tr>
@@ -255,16 +265,16 @@ const BookingTrendsPage = () => {
 											key={day.date}
 											className='hover:bg-gray-50 dark:hover:bg-gray-700'
 										>
-											<td className='px-6 py-4 whitespace-nowrap'>
+											<td className='px-3 md:px-6 py-4 whitespace-nowrap text-sm'>
 												{formatDate(day.date)}
 											</td>
-											<td className='px-6 py-4 whitespace-nowrap font-medium'>
+											<td className='px-3 md:px-6 py-4 whitespace-nowrap font-medium text-sm'>
 												{day.total_bookings}
 											</td>
-											<td className='px-6 py-4 whitespace-nowrap'>
+											<td className='px-3 md:px-6 py-4 whitespace-nowrap text-sm'>
 												{day.total_booked_hours.toFixed(1)} hrs
 											</td>
-											<td className='px-6 py-4 whitespace-nowrap'>
+											<td className='px-3 md:px-6 py-4 whitespace-nowrap text-sm'>
 												{(day.total_booked_hours / day.total_bookings).toFixed(
 													1
 												)}{' '}

@@ -130,10 +130,7 @@ const UtilizationDashboard = () => {
 											Booked Hours
 										</th>
 										<th className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
-											Available Hours
-										</th>
-										<th className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
-											Utilization
+											Hours Still Available
 										</th>
 									</tr>
 								</thead>
@@ -153,27 +150,10 @@ const UtilizationDashboard = () => {
 												{room.total_booked_hours.toFixed(1)} hrs
 											</td>
 											<td className='px-6 py-4 whitespace-nowrap'>
-												{room.total_available_hours.toFixed(1)} hrs
-											</td>
-											<td className='px-6 py-4 whitespace-nowrap'>
-												<div className='flex items-center gap-3'>
-													<div className='flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-2 max-w-[100px]'>
-														<div
-															className={`h-2 rounded-full ${getUtilizationColor(
-																room.utilization_percentage
-															)}`}
-															style={{
-																width: `${Math.min(
-																	100,
-																	room.utilization_percentage
-																)}%`,
-															}}
-														></div>
-													</div>
-													<span className='font-semibold text-sm'>
-														{room.utilization_percentage.toFixed(1)}%
-													</span>
-												</div>
+												{(
+													room.total_available_hours - room.total_booked_hours
+												).toFixed(1)}{' '}
+												hrs
 											</td>
 										</tr>
 									))}

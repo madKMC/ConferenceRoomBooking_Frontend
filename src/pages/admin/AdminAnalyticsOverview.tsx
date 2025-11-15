@@ -82,8 +82,8 @@ const AdminAnalyticsOverview = () => {
 			</div>
 
 			{/* Summary Cards */}
-			<div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-				<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6'>
+			<div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6'>
+				<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6'>
 					<div className='flex items-center justify-between mb-4'>
 						<div className='p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg'>
 							<Calendar
@@ -92,15 +92,15 @@ const AdminAnalyticsOverview = () => {
 							/>
 						</div>
 					</div>
-					<h3 className='text-2xl font-bold text-gray-800 dark:text-white'>
+					<h3 className='text-xl md:text-2xl font-bold text-gray-800 dark:text-white break-all'>
 						{totalBookings}
 					</h3>
-					<p className='text-gray-600 dark:text-gray-400 text-sm'>
+					<p className='text-gray-600 dark:text-gray-400 text-xs md:text-sm'>
 						Total Bookings (Last 30 Days)
 					</p>
 				</div>
 
-				<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6'>
+				<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6'>
 					<div className='flex items-center justify-between mb-4'>
 						<div className='p-3 bg-green-100 dark:bg-green-900/30 rounded-lg'>
 							<BarChart3
@@ -109,15 +109,15 @@ const AdminAnalyticsOverview = () => {
 							/>
 						</div>
 					</div>
-					<h3 className='text-2xl font-bold text-gray-800 dark:text-white'>
+					<h3 className='text-xl md:text-2xl font-bold text-gray-800 dark:text-white break-all'>
 						{avgUtilization.toFixed(1)}%
 					</h3>
-					<p className='text-gray-600 dark:text-gray-400 text-sm'>
+					<p className='text-gray-600 dark:text-gray-400 text-xs md:text-sm'>
 						Average Room Utilization
 					</p>
 				</div>
 
-				<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6'>
+				<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6'>
 					<div className='flex items-center justify-between mb-4'>
 						<div className='p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg'>
 							<DoorOpen
@@ -126,7 +126,7 @@ const AdminAnalyticsOverview = () => {
 							/>
 						</div>
 					</div>
-					<h3 className='text-2xl font-bold text-gray-800 dark:text-white'>
+					<h3 className='text-xl md:text-2xl font-bold text-gray-800 dark:text-white break-all'>
 						{utilization.length}
 					</h3>
 					<p className='text-gray-600 dark:text-gray-400 text-sm'>

@@ -214,36 +214,36 @@ const UserHistoryPage = () => {
 					)}
 
 					{/* Summary Cards */}
-					<div className='grid grid-cols-1 md:grid-cols-4 gap-6'>
-						<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6'>
-							<h3 className='text-sm font-medium text-gray-600 dark:text-gray-400 mb-2'>
+					<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6'>
+						<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6'>
+							<h3 className='text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400 mb-2 truncate'>
 								Total Bookings
 							</h3>
-							<div className='text-3xl font-bold text-gray-800 dark:text-white'>
+							<div className='text-2xl md:text-3xl font-bold text-gray-800 dark:text-white break-all'>
 								{summary.total_bookings}
 							</div>
 						</div>
-						<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6'>
-							<h3 className='text-sm font-medium text-gray-600 dark:text-gray-400 mb-2'>
+						<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6'>
+							<h3 className='text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400 mb-2 truncate'>
 								Canceled Bookings
 							</h3>
-							<div className='text-3xl font-bold text-red-600 dark:text-red-400'>
+							<div className='text-2xl md:text-3xl font-bold text-red-600 dark:text-red-400 break-all'>
 								{summary.total_canceled_bookings}
 							</div>
 						</div>
-						<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6'>
-							<h3 className='text-sm font-medium text-gray-600 dark:text-gray-400 mb-2'>
+						<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6'>
+							<h3 className='text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400 mb-2 truncate'>
 								Total Hours
 							</h3>
-							<div className='text-3xl font-bold text-gray-800 dark:text-white'>
+							<div className='text-2xl md:text-3xl font-bold text-gray-800 dark:text-white break-all'>
 								{summary.total_booked_hours.toFixed(1)}
 							</div>
 						</div>
-						<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6'>
-							<h3 className='text-sm font-medium text-gray-600 dark:text-gray-400 mb-2'>
+						<div className='bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6'>
+							<h3 className='text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400 mb-2 truncate'>
 								Rooms Used
 							</h3>
-							<div className='text-3xl font-bold text-gray-800 dark:text-white'>
+							<div className='text-2xl md:text-3xl font-bold text-gray-800 dark:text-white break-all'>
 								{summary.rooms_used.length}
 							</div>
 						</div>

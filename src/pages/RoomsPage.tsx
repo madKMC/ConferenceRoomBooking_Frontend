@@ -264,7 +264,7 @@ const RoomsPage = () => {
 						return (
 							<div
 								key={room.id}
-								className='bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden'
+								className='bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden flex flex-col'
 							>
 								<div className='bg-linear-to-br from-primary-500 to-primary-600 p-6 text-white'>
 									<div className='flex items-start justify-between'>
@@ -287,45 +287,47 @@ const RoomsPage = () => {
 									</div>
 								</div>
 
-								<div className='p-6'>
+								<div className='p-6 flex-1 flex flex-col'>
 									{room.description && (
 										<p className='text-sm text-gray-600 dark:text-gray-400 mb-4'>
 											{room.description}
 										</p>
 									)}
 
-									{room.amenities && room.amenities.length > 0 && (
-										<div>
-											<h4 className='text-sm font-semibold mb-3 text-gray-700 dark:text-gray-300'>
-												Amenities
-											</h4>
-											<div className='space-y-2'>
-												{room.amenities.map((amenity) => {
-													const Icon = getAmenityIcon(amenity.name);
-													return (
-														<div
-															key={amenity.id}
-															className='flex items-center gap-2 text-sm'
-														>
-															<Icon
-																size={16}
-																className='text-primary-600 dark:text-primary-400'
-															/>
-															<span className='text-gray-700 dark:text-gray-300'>
-																{amenity.name}
-															</span>
-														</div>
-													);
-												})}
+									<div className='flex-1'>
+										{room.amenities && room.amenities.length > 0 && (
+											<div>
+												<h4 className='text-sm font-semibold mb-3 text-gray-700 dark:text-gray-300'>
+													Amenities
+												</h4>
+												<div className='space-y-2'>
+													{room.amenities.map((amenity) => {
+														const Icon = getAmenityIcon(amenity.name);
+														return (
+															<div
+																key={amenity.id}
+																className='flex items-center gap-2 text-sm'
+															>
+																<Icon
+																	size={16}
+																	className='text-primary-600 dark:text-primary-400'
+																/>
+																<span className='text-gray-700 dark:text-gray-300'>
+																	{amenity.name}
+																</span>
+															</div>
+														);
+													})}
+												</div>
 											</div>
-										</div>
-									)}
+										)}
 
-									{(!room.amenities || room.amenities.length === 0) && (
-										<p className='text-sm text-gray-500 dark:text-gray-400 italic'>
-											No amenities listed
-										</p>
-									)}
+										{(!room.amenities || room.amenities.length === 0) && (
+											<p className='text-sm text-gray-500 dark:text-gray-400 italic'>
+												No amenities listed
+											</p>
+										)}
+									</div>
 								</div>
 
 								<div className='px-6 pb-6'>
