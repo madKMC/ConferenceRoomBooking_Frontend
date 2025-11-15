@@ -1,10 +1,14 @@
-import { LogOut, User, Bell } from 'lucide-react';
+import { LogOut, User, Bell, Menu } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { invitationsApi } from '../../lib/invitations';
 
-const Header = () => {
+interface HeaderProps {
+	onToggleSidebar?: () => void;
+}
+
+const Header = ({ onToggleSidebar }: HeaderProps) => {
 	const { user, logout } = useAuth();
 	const navigate = useNavigate();
 	const [pendingCount, setPendingCount] = useState(0);
@@ -33,15 +37,24 @@ const Header = () => {
 	};
 
 	return (
-		<header className='sticky top-0 z-20 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4'>
+		<header className='sticky top-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 md:px-6 py-4'>
 			<div className='flex items-center justify-between'>
-				<div className='flex items-center gap-4'>
-					<h2 className='text-lg font-semibold text-gray-800 dark:text-gray-200'>
+				<div className='flex items-center gap-3 md:gap-4'>
+					{/* Burger menu - visible on all screen sizes */}
+					<button
+						onClick={onToggleSidebar}
+						className='p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors'
+						aria-label='Toggle menu'
+					>
+						<Menu size={20} />
+					</button>
+
+					<h2 className='hidden md:block text-lg font-semibold text-gray-800 dark:text-gray-200'>
 						Room Booking System
 					</h2>
 				</div>
 
-				<div className='flex items-center gap-4'>
+				<div className='flex items-center gap-2 md:gap-4'>
 					{user && (
 						<>
 							<button
@@ -57,13 +70,13 @@ const Header = () => {
 								)}
 							</button>
 
-							<div className='flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-700'>
-								<User size={18} />
-								<span className='text-sm font-medium'>
+							<div className='flex items-center gap-1 md:gap-2 px-2 md:px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-700'>
+								<User size={16} className='md:w-[18px] md:h-[18px]' />
+								<span className='text-xs md:text-sm font-medium'>
 									{user.first_name} {user.last_name}
 								</span>
 								{user.role === 'admin' && (
-									<span className='px-2 py-0.5 text-xs rounded-full bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300'>
+									<span className='hidden md:inline px-2 py-0.5 text-xs rounded-full bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300'>
 										Admin
 									</span>
 								)}
@@ -71,10 +84,10 @@ const Header = () => {
 
 							<button
 								onClick={logout}
-								className='flex items-center gap-2 px-4 py-2 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors'
+								className='p-2 md:px-4 md:py-2 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors'
+								aria-label='Logout'
 							>
 								<LogOut size={18} />
-								<span className='hidden sm:inline'>Logout</span>
 							</button>
 						</>
 					)}
