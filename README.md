@@ -6,20 +6,25 @@ A modern, responsive React frontend for managing conference room bookings. Built
 
 - **Authentication**: Login and registration with JWT token management
 - **Dashboard**: View next upcoming booking and available rooms for the next time slot
-- **Bookings Management**: Create, view, update, and cancel room bookings
+- **Bookings Management**: Create, view, update, and cancel room bookings with invitations
+- **Invitations**: Send and receive booking invitations, accept or decline invites
 - **Rooms Browser**: View all available rooms with their amenities and capacity
+- **Admin Analytics**: Comprehensive analytics dashboard with room utilization, booking trends, and user history
+- **Input Validation**: Client-side validation for booking times, date ranges, and phone numbers (South African format)
 - **Dark Mode**: Toggle between light and dark themes
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
 - **Retractable Sidebar**: Collapsible navigation for optimal screen space
 
 ## Tech Stack
 
-- **React 18** with TypeScript
-- **Vite** for fast development and building
-- **Tailwind CSS** for styling
-- **React Router** for navigation
+- **React 19** with TypeScript
+- **Vite 7** for fast development and building
+- **Tailwind CSS v4** for styling
+- **React Router v7** for navigation
 - **Axios** for API communication
 - **Lucide React** for icons
+- **Vitest** for testing
+- **React Testing Library** for component testing
 
 ## Prerequisites
 
@@ -66,22 +71,38 @@ The production-ready files will be in the `dist/` directory.
 ```
 src/
 ├── components/
-│   ├── auth/              # Login and registration forms
-│   ├── bookings/          # Booking modal and components
-│   ├── layout/            # Sidebar, header, and main layout
-│   └── rooms/             # Room-related components
+│   ├── auth/              # Login, registration forms, and admin route guard
+│   ├── bookings/          # Booking modal with invitations
+│   └── layout/            # Sidebar, header, and main layout
 ├── contexts/
 │   ├── AuthContext.tsx    # Authentication state management
 │   └── ThemeContext.tsx   # Dark mode state management
+├── hooks/
+│   └── useBookingValidation.ts  # Custom validation hook
 ├── lib/
-│   └── api.ts             # Axios configuration with interceptors
+│   ├── api.ts             # Axios configuration with interceptors
+│   ├── analytics.ts       # Analytics API functions
+│   ├── constants.ts       # Validation constants and rules
+│   └── invitations.ts     # Invitations API functions
 ├── pages/
-│   ├── DashboardPage.tsx  # Dashboard view
+│   ├── admin/             # Admin-only pages
+│   │   ├── AdminAnalyticsOverview.tsx  # Analytics overview
+│   │   ├── BookingTrendsPage.tsx       # Booking trends chart
+│   │   ├── UserHistoryPage.tsx         # User booking history
+│   │   └── UtilizationDashboard.tsx    # Room utilization dashboard
 │   ├── BookingsPage.tsx   # Bookings management
+│   ├── DashboardPage.tsx  # Dashboard view
+│   ├── InvitationsPage.tsx # Invitations management
 │   ├── LoginPage.tsx      # Login and registration page
-│   └── RoomsPage.tsx      # Rooms browser
+│   └── RoomsPage.tsx      # Rooms browser with availability checker
 ├── types/
 │   └── index.ts           # TypeScript interfaces
+├── __tests__/             # Test files
+│   ├── components/        # Component tests
+│   ├── hooks/             # Hook tests
+│   └── lib/               # Library tests
+├── test/
+│   └── setup.ts           # Test environment setup
 ├── App.tsx                # Main app component with routing
 ├── main.tsx               # Application entry point
 └── index.css              # Global styles with Tailwind
@@ -106,16 +127,39 @@ src/
 
 - View all your bookings with filters (all/upcoming/past)
 - Create new bookings with room selection and time slots
-- Edit existing bookings
+- Invite other users to your bookings
+- Edit existing bookings and manage invitees
 - Cancel bookings
+- Conflict detection with real-time availability checking
 - Business hours enforcement (9 AM - 5 PM)
+- Duration limits (30 minutes to 4 hours)
+
+### Invitations
+
+- Receive booking invitations from other users
+- Accept or decline invitations
+- View invitation status (pending/accepted/declined/expired)
+- Automatic expiration for past bookings
+- Real-time pending invitation badge in header
 
 ### Rooms
 
 - Browse all available conference rooms
 - Filter by capacity and floor
+- Search by room name
 - View room amenities (projector, WiFi, monitors, etc.)
 - See room capacity and location
+- Check real-time availability for specific dates
+- View existing bookings on timeline
+
+### Admin Analytics (Admin Users Only)
+
+- **Analytics Overview**: High-level metrics and trends
+- **Room Utilization**: Track usage patterns across all rooms
+- **Booking Trends**: Visualize booking patterns over time
+- **User History**: View detailed booking history for all users
+- Date range filters with validation (max 365 days)
+- Export-ready data views
 
 ### Dark Mode
 
@@ -123,21 +167,87 @@ src/
 - Preference saved in localStorage
 - Respects system preference by default
 
+## Input Validation & Security
+
+The application implements comprehensive client-side validation to ensure data integrity and user experience:
+
+### Validation Rules
+
+**Booking Constraints:**
+
+- Minimum duration: 30 minutes
+- Maximum duration: 4 hours (240 minutes)
+- Business hours: 09:00 - 17:00
+- Maximum invitees per booking: 20
+
+**Date Range Constraints:**
+
+- Maximum analytics date range: 365 days
+- Start date must be before end date
+- Both dates required for range queries
+
+**Phone Number Validation (South African):**
+
+- Landline formats: `012-345-6789`, `012 345 6789`, `0123456789`
+- Mobile formats: `071 234 5678`, `0712345678`
+- International: `+27 12 345 6789`, `+27123456789`
+- Phone field is optional
+
+### Production-Ready Error Handling
+
+All error logging has been sanitized for production to prevent information leakage:
+
+- ✅ No sensitive user data exposed in console logs
+- ✅ No API response structures revealed
+- ✅ No SQL queries or database information logged
+- ✅ Generic error messages for security
+- ✅ Silent failures with appropriate user feedback
+
+Validation is implemented in:
+
+- `src/lib/constants.ts` - Centralized validation rules
+- `src/hooks/useBookingValidation.ts` - Reusable validation logic
+- Component-level validation for real-time feedback
+
 ## API Integration
 
 The frontend connects to the backend API for all data operations:
 
+**Authentication:**
+
 - `POST /auth/login` - User login
 - `POST /auth/register` - User registration
 - `GET /auth/me` - Get current user
+
+**Rooms:**
+
 - `GET /rooms` - List all rooms
-- `GET /rooms/:id/availability` - Check room availability
+- `GET /rooms/:id` - Get room details
+- `GET /rooms/:id/bookings` - Get room bookings for a specific date
+
+**Bookings:**
+
 - `GET /bookings` - List all bookings (admin only)
 - `POST /bookings` - Create a booking
 - `GET /bookings/:id` - Get booking details
 - `PATCH /bookings/:id` - Update a booking
 - `DELETE /bookings/:id` - Cancel a booking
 - `GET /users/:id/bookings` - Get user's bookings
+
+**Invitations:**
+
+- `GET /invitations/my-invitations` - Get user's invitations
+- `POST /invitations/:bookingId/invitees` - Add invitees to booking
+- `DELETE /invitations/:bookingId/invitees/:userId` - Remove invitee
+- `GET /invitations/:bookingId/invitees` - Get booking invitees
+- `PATCH /invitations/:bookingId/respond` - Accept/decline invitation
+- `GET /users` - Search users for invitations
+
+**Analytics (Admin):**
+
+- `GET /analytics/utilization` - Room utilization data
+- `GET /analytics/daily-bookings` - Daily booking trends
+- `GET /analytics/user-summary` - User booking summary
 
 ## Color Scheme
 
@@ -255,20 +365,10 @@ The test suite covers critical functionality:
 
 **BookingModal:**
 
-- ✓ Enforces 30-minute minimum duration
-- ✓ Enforces 4-hour maximum duration
-- ✓ Enforces business hours (09:00 start)
-- ✓ Enforces business hours (17:00 end)
-- ✓ Requires title field
-- ✓ Validates time logic (end > start)
-
-**UtilizationDashboard:**
-
-- ✓ Requires both start and end dates
-- ✓ Rejects start after end
-- ✓ Rejects ranges > 365 days
-- ✓ Accepts valid date ranges
-- ✓ Calls API with correct parameters
+- ✓ Renders booking form with all fields
+- ✓ Displays business hours information
+- ✓ Shows invitation options
+- ✓ Includes cancel and create buttons
 
 ### Test Configuration
 
